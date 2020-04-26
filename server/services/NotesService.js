@@ -18,7 +18,7 @@ class NotesService {
   }
   async create(rawData) {
     let data = await dbContext.Notes.create(rawData)
-    return rawData
+    return data
   }
   async edit(id, userEmail, update) {
     let data = await dbContext.Notes.findOneAndUpdate({ _id: id, creatorEmail: userEmail }, update, { new: true })

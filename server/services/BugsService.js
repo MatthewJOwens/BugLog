@@ -18,7 +18,7 @@ class BugsService {
   }
   async create(rawData) {
     let data = await dbContext.Bugs.create(rawData)
-    return rawData
+    return data
   }
   async edit(id, userEmail, update) {
     let data = await dbContext.Bugs.findOneAndUpdate({ _id: id, creatorEmail: userEmail }, update, { new: true })

@@ -34,15 +34,16 @@ export class NotesController extends BaseController {
   async create(req, res, next) {
     try {
       // NOTE NEVER TRUST THE CLIENT TO ADD THE CREATOR ID
-      req.body.creatorEmail = req.user.email;
-      let data = notesService.create(req.body);
+      req.body.creatorEmail = req.userInfo.email;
+      let data = await notesService.create(req.body);
+      return res.status(201).send(data)
     } catch (error) {
       next(error);
     }
   }
   async edit(req, res, next) {
     try {
-      let data = await notesService.edit(req.params.id, req.user.email, req.body)
+      let data = await notesService.edit(req.params.id, req.userInfo.email, req.body)
       return res.send(data)
     } catch (error) {
       next(error)
