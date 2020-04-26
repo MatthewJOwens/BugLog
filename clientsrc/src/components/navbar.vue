@@ -45,6 +45,7 @@ export default {
       console.log("this.$auth.user: ");
       console.log(this.$auth.user);
       this.$store.dispatch("getProfile");
+      this.$store.dispatch("getBugs");
     },
     async logout() {
       this.$store.dispatch("resetBearer");
