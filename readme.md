@@ -10,7 +10,7 @@ Users can also add notes to the bug report providing detailed steps towards the 
 
 Once a bug has been closed, no further editing is allowed.
 
-Here are some mock-ups from the client.
+Here are some mock-ups from the client. https://www.figma.com/file/VlJeFTTbt9bXYaEJkst10C/BugReport
 
 <hr>
 
