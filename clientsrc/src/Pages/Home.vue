@@ -6,63 +6,91 @@
       <h4>Track your team's bug inside.</h4>
       <p>Log in to get access to your team's log.</p>
     </div>
-    <div class="row justify-content-center w-100" v-else>
-      <div class="col-10 p-0 m-1">
-        <table
-          class="row table m-0 table-striped table-sm table-hover table-responsive table-bordered p-0"
-        >
-          <thead class="thead-dark">
-            <tr>
-              <th class="w-25">Title</th>
-              <th class="w-25">Reported By</th>
-              <th class="w-25">Status</th>
-              <th class="w-25">Last Modified</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="bug in bugs" :key="bug.id" :bugData="bug" @click="goToBug(bug)">
-              <td>{{bug.title}}</td>
-              <td>{{bug.creator.name}}</td>
-              <td
-                :class="{'table-success': bug.closed, 'table-danger': !bug.closed }"
-              >{{bug.closed}}</td>
-              <td>{{bug.updatedAt}}</td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="row justify-content-center" v-else>
+      <!-- Button trigger modal -->
+      <div class="col-12">
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-toggle="modal"
+          data-target="#addBugModalScrollable"
+        >Add Bug</button>
       </div>
-      <div class="col-3">
-        <button type="button" class="btn btn-primary" @click="getBugs()">Get Bugs</button>
+      <div class="col-10 p-0 m-1">
+        <BugTable />
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="addBugModalScrollable"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="addBugModalScrollableTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addBugModalScrollableTitle">Add bug to track</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <label for="title">Subject:</label>
+            <input
+              name="title"
+              v-model="newBug.title"
+              type="text"
+              size="55"
+              placeholder="Enter a subject here."
+            />
+            <label for="description">Description:</label>
+            <textarea
+              name="description"
+              v-model="newBug.description"
+              cols="60"
+              rows="10"
+              placeholder="Enter a description of the bug."
+            />
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-dismiss="modal"
+              @click="addBug()"
+            >Save</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Bug from "../components/Bug.vue";
+import BugTable from "../components/BugTable.vue";
 export default {
   name: "home",
   data() {
     return {
+      newBug: {}
       // pageBugs: []
     };
   },
-  methods: {
-    getBugs() {
-      this.$store.dispatch("getBugs");
-    },
-    goToBug(bug) {
-      this.$router.push("bugs/" + bug.id);
-    }
-  },
   computed: {
-    bugs() {
-      return this.$store.state.bugs;
+    activeBug() {
+      return this.$store.state.activeBug;
     }
   },
-  created() {
-    this.getBugs();
+  methods: {
+    addBug() {
+      this.$store.dispatch("createBug", this.newBug);
+    }
   },
-  components: { Bug }
+  components: { BugTable }
 };
 </script>
