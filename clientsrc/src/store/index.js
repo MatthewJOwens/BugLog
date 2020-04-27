@@ -19,7 +19,8 @@ export default new Vuex.Store({
   state: {
     profile: {},
     bugs: [],
-    notes: []
+    activeBug: {},
+    notes: [],
   },
   mutations: {
     setProfile(state, profile) {
@@ -27,6 +28,12 @@ export default new Vuex.Store({
     },
     setBugs(state, bugs) {
       state.bugs = bugs
+    },
+    setActiveBug(state, bug) {
+      state.activeBug = bug
+    },
+    setNotes(state, notes) {
+      state.notes = notes
     }
   },
   actions: {
@@ -48,6 +55,46 @@ export default new Vuex.Store({
       try {
         let res = await api.get('bugs')
         commit("setBugs", res.data)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async getBugDetails({ commit, dispatch }, bugId) {
+      try {
+        let res = await api.get("bugs/" + bugId)
+        commit("setActiveBug", res.data)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async getNotes({ commit, dispatch }, bugId) {
+      try {
+        let res = await api.get("bugs/" + bugId + "/notes")
+        commit("setNotes", res.data)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async modifyBug({ commit, dispatch }, activeBug) {
+      try {
+        let res = await api.put("bugs/" + activeBug.id, activeBug)
+        commit("setActiveBug", res.data)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async createNote({ commit, dispatch }, newNote) {
+      try {
+        let res = await api.post("notes", newNote)
+        dispatch("getNotes", newNote.bug)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async destroyNote({ commit, dispatch }, noteData) {
+      try {
+        await api.delete("notes/" + noteData.id)
+        dispatch("getNotes", noteData.bug)
       } catch (error) {
         console.error(error)
       }

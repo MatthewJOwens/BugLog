@@ -33,11 +33,12 @@ class BugsService {
       throw new BadRequest("Invalid ID")
     }
   }
-  async getNotesByBugId(bug) {
-    let notes = await dbContext.Notes.find({ bugId: bug.id })
+  async getNotesByBugId(bugId) {
+    let notes = await dbContext.Notes.find({ bug: bugId })
     if (!notes) {
       throw new BadRequest("Invalid ID")
     }
+    return notes
   }
 }
 
