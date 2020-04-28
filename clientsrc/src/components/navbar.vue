@@ -1,6 +1,8 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <router-link class="navbar-brand" :to="{ name: 'Home' }">BugLog</router-link>
+    <router-link class="navbar-brand" :to="{ name: 'Home' }">
+      <i class="fas fa-virus-slash"></i>BugLog
+    </router-link>
     <button
       class="navbar-toggler"
       type="button"
