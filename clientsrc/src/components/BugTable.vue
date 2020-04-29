@@ -1,9 +1,6 @@
 <template>
   <div class="bugTable">
-    <b-table
-      class="table m-0 table-striped table-sm table-hover table-responsive table-bordered p-0"
-      :fields="fields"
-    >
+    <table class="table m-0 table-striped table-sm table-hover table-responsive table-bordered p-0">
       <thead class="thead-dark">
         <tr>
           <th>Title</th>
@@ -22,15 +19,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="bug in filterBugs" :key="bug.id" :bugData="bug" @click="goToBug(bug)">
+        <tr v-for="bug in bugs" :key="bug.id" :bugData="bug" @click="goToBug(bug)">
           <td>{{bug.title}}</td>
           <td>{{bug.creator.name}}</td>
           <td :class="{'table-success': bug.closed, 'table-danger': !bug.closed }">{{bug.closed}}</td>
-          <td>{{bug.updatedAt}}</td>
+          <td>{{new Date(bug.updatedAt).toDateString()}}</td>
+          <!-- bug.updatedAt.split('T')[0] I can break my code like this -->
         </tr>
       </tbody>
       <!-- <template v-slot:cell(subject)="bug in bugs"> -->
-    </b-table>
+    </table>
   </div>
 </template>
 
@@ -41,7 +39,6 @@ export default {
   name: "bugTable",
   data() {
     return {
-      filterBugs: [],
       filterChoice: "Status"
     };
   },
@@ -54,25 +51,27 @@ export default {
     },
     filterAll() {
       this.filterChoice = "Status";
-      this.filterBugs = this.bugs;
     },
     filterClosed() {
       this.filterChoice = "Closed";
-      this.filterBugs = this.bugs.filter(x => x.closed == true);
     },
     filterOpen() {
       this.filterChoice = "Open";
-      this.filterBugs = this.bugs.filter(x => x.closed == false);
     }
   },
   computed: {
     bugs() {
-      return this.$store.state.bugs;
+      if (this.filterChoice == "Open") {
+        return this.$store.state.bugs.filter(x => x.closed == false);
+      } else if (this.filterChoice == "Closed") {
+        return this.$store.state.bugs.filter(x => x.closed == true);
+      } else {
+        return this.$store.state.bugs;
+      }
     }
   },
   created() {
     this.getBugs();
-    this.filterBugs = this.bugs;
   },
   components: { Bug }
 };

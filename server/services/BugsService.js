@@ -2,11 +2,12 @@ import { dbContext } from "../db/DbContext";
 import { BadRequest } from "../utils/Errors";
 
 class BugsService {
-  async findAll(query = {}) {
+  async findAll(query = {}, pageNumber) {
     let bugs = await dbContext.Bugs.find(query).populate(
       "creator",
       "name picture"
-    );
+    )
+    // .skip((pageNumber-1)*20).limit(20);
     return bugs;
   }
   async findById(id) {
@@ -21,9 +22,9 @@ class BugsService {
     return data
   }
   async edit(id, userEmail, update) {
-    let data = await dbContext.Bugs.findOneAndUpdate({ _id: id, creatorEmail: userEmail }, update, { new: true })
+    let data = await dbContext.Bugs.findOneAndUpdate({ _id: id, creatorEmail: userEmail, closed: false }, update, { new: true })
     if (!data) {
-      throw new BadRequest("Invalid ID or you do not own this list.")
+      throw new BadRequest("Invalid ID or you do not own this bug or it is closed.")
     }
     return data
   }
