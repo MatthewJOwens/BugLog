@@ -24,7 +24,7 @@
       </div>
     </div>
     <br />
-    <div class="row">
+    <div class="row my-5">
       <Note class="col-7" v-for="note in notes" :key="note.id" :noteData="note"></Note>
       <div class="col-6">
         <div>-------------------</div>
